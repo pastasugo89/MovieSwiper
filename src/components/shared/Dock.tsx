@@ -5,13 +5,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 
+import { WatchlistDrawer } from "@/components/features/WatchlistDrawer";
+
 export function Dock() {
   const pathname = usePathname();
 
   const tabs = [
     { name: "Scopri", icon: Compass, path: "/" },
-    { name: "Watchlist", icon: Heart, path: "/watchlist" },
-    { name: "Info", icon: User, path: "/info" }, // Changed from /profile to /info based on requirements
+    { name: "Watchlist", icon: Heart, path: null }, // path null triggers drawer
+    { name: "Info", icon: User, path: "/info" },
   ];
 
   return (
@@ -23,27 +25,37 @@ export function Dock() {
             const isActive = pathname === tab.path;
             const Icon = tab.icon;
 
+            const content = (
+                <div className={`relative flex flex-col items-center gap-1 p-2 transition-colors duration-200 ${
+                  isActive || (!tab.path && false) ? "text-primary" : "text-zinc-500 hover:text-zinc-300"
+                }`}>
+                    {isActive && (
+                      <motion.div
+                        layoutId="dock-active"
+                        className="absolute inset-0 rounded-xl bg-primary/10"
+                        initial={false}
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      />
+                    )}
+                    <Icon size={26} strokeWidth={isActive ? 2.5 : 2} className="relative z-10" />
+                    <span className="text-[10px] font-medium relative z-10">{tab.name}</span>
+                </div>
+            );
+
+            if (!tab.path) {
+                return (
+                    <WatchlistDrawer key={tab.name}>
+                        {content}
+                    </WatchlistDrawer>
+                )
+            }
+
             return (
               <Link
                 key={tab.path}
                 href={tab.path}
-                className={`relative flex flex-col items-center gap-1 p-2 transition-colors duration-200 ${
-                  isActive ? "text-primary" : "text-zinc-500 hover:text-zinc-300"
-                }`}
               >
-                {isActive && (
-                  <motion.div
-                    layoutId="dock-active"
-                    // Modified active indicator to be subtle glow at the bottom or top?
-                    // Request said "Add a visual state for active button"
-                    // Keeping it simple but effective
-                    className="absolute inset-0 rounded-xl bg-primary/10"
-                    initial={false}
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                  />
-                )}
-                <Icon size={26} strokeWidth={isActive ? 2.5 : 2} className="relative z-10" />
-                <span className="text-[10px] font-medium relative z-10">{tab.name}</span>
+                {content}
               </Link>
             );
           })}
