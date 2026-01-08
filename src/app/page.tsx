@@ -1,10 +1,12 @@
-import { getPopularMovies } from "@/app/actions/movies";
+import { getDiscoverMovies } from "@/app/actions/movies";
 import { Video, SlidersHorizontal } from "lucide-react";
 import { CardStack } from "@/components/features/CardStack";
 
 export default async function Home() {
-  const movies = await getPopularMovies(1);
-  console.log("Movies fetched:", movies.results.slice(0, 5));
+  // Randomize start page to simulate "shuffling" the deck on refresh
+  const startPage = Math.floor(Math.random() * 50) + 1;
+  const movies = await getDiscoverMovies(startPage);
+  console.log(`Movies fetched from page ${startPage}:`, movies.results.slice(0, 3).map(m => m.title));
 
   return (
     <div className="flex flex-col h-full w-full">
@@ -22,7 +24,7 @@ export default async function Home() {
       {/* CardStackContainer - Flexible area occupying all available space */}
       <div className="flex-1 relative w-full h-full overflow-hidden flex items-center justify-center p-4">
         {/* Card Stack System */}
-        <CardStack initialMovies={movies.results} />
+        <CardStack initialMovies={movies.results} startPage={startPage} />
       </div>
       
       {/* Spacer for Dock */}
