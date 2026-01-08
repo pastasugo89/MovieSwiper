@@ -11,7 +11,7 @@ export function Dock() {
 
   const tabs = [
     { name: "Scopri", icon: Compass, path: "/" },
-    { name: "Watchlist", icon: Heart, path: "/watchlist" },
+    { name: "Watchlist", icon: Heart, path: "/preferiti" },
     { name: "Info", icon: User, path: "/info" },
   ];
 

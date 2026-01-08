@@ -1,4 +1,5 @@
 "use client";
+// Force route refresh - HMR trigger
 
 import { useWatchlistStore } from "@/store/useWatchlistStore";
 import Image from "next/image";
